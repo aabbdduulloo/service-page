@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import { useState } from "react";
 import { auth } from "@service";
 import { useNavigate } from "react-router-dom";
+
 const Index = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -16,10 +17,10 @@ const Index = () => {
     password: "",
   };
 
-  const handleSubmit = async value => {
-    console.log(value);
+  const handleSubmit = async values => {
+    console.log(values);
     try {
-      const response = await auth.sign_in(value);
+      const response = await auth.sign_in(values);
       if (response.status === 200) {
         console.log(response);
         Notification({ title: "Success", type: "success" });
@@ -37,9 +38,11 @@ const Index = () => {
   return (
     <>
       <ToastContainer />
-      <div className="w-full h-screen flex items-center justify-center">
-        <div className="w-full sm:w-[600px] p-5">
-          <h1 className="text-center my-6 text-[50px]">Login</h1>
+      <div className="w-full h-screen flex items-center justify-center bg-gray-100">
+        <div className="w-full sm:w-[600px] p-5 bg-white rounded-lg shadow-lg">
+          <h1 className="text-center my-6 text-4xl font-bold text-gray-800">
+            Login
+          </h1>
           <Formik
             initialValues={initialValues}
             validationSchema={signInValidationSchema}
@@ -55,11 +58,12 @@ const Index = () => {
                   fullWidth
                   margin="normal"
                   variant="outlined"
+                  className="mb-4"
                   helperText={
                     <ErrorMessage
                       name="email"
                       component="p"
-                      className="text-[red] text-[15px]"
+                      className="text-red-500 text-sm"
                     />
                   }
                 />
@@ -71,11 +75,12 @@ const Index = () => {
                   fullWidth
                   margin="normal"
                   variant="outlined"
+                  className="mb-4"
                   helperText={
                     <ErrorMessage
                       name="password"
                       component="p"
-                      className="text-[red] text-[15px]"
+                      className="text-red-500 text-sm"
                     />
                   }
                   InputProps={{
@@ -97,8 +102,18 @@ const Index = () => {
                   color="primary"
                   disabled={isSubmitting}
                   fullWidth
+                  className="mb-2"
                 >
                   {isSubmitting ? "Submitting" : "Sign In"}
+                </Button>
+                <Button
+                  onClick={() => navigate("/sign-up")}
+                  variant="outlined"
+                  color="primary"
+                  fullWidth
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Signing" : "Sign Up"}
                 </Button>
               </Form>
             )}

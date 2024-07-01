@@ -15,15 +15,18 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import routes from "../../../router/routes";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../../assets/Logo.svg";
 import { Outlet } from "react-router-dom";
+import { Button } from "@mui/material";
+
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
+  const navigate = useNavigate(); // useNavigate hook for navigation
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -39,7 +42,16 @@ function ResponsiveDrawer(props) {
       setMobileOpen(!mobileOpen);
     }
   };
+
   const { pathname } = useLocation();
+
+  const handleLogout = () => {
+    // Remove access token from localStorage
+    localStorage.removeItem("access_token");
+
+    // Redirect to the login page
+    navigate("/");
+  };
 
   const drawer = (
     <div>
@@ -56,9 +68,7 @@ function ResponsiveDrawer(props) {
           >
             <ListItem disablePadding>
               <ListItemButton>
-                <ListItemIcon>
-                  {/* <span className={item.path === pathname ? "text-white" : "text-gray-500"}>{item.icon}</span> */}
-                </ListItemIcon>
+                <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.content} />
               </ListItemButton>
             </ListItem>
@@ -91,9 +101,12 @@ function ResponsiveDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Responsive drawer
           </Typography>
+          <Button variant="contained" color="error" onClick={handleLogout}>
+            Log Out
+          </Button>
         </Toolbar>
       </AppBar>
       <Box
@@ -108,7 +121,7 @@ function ResponsiveDrawer(props) {
           onTransitionEnd={handleDrawerTransitionEnd}
           onClose={handleDrawerClose}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: "block", sm: "none" },

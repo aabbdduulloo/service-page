@@ -7,9 +7,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import IconButton from "@mui/material/IconButton";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -30,65 +27,34 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(id, serviceName, price) {
-  return { id, serviceName, price };
+function createData(name, calories, fat, carbs) {
+  return { name, calories, fat, carbs };
 }
 
-const rows = [
-  createData(1, "Xizmat 1", 10000),
-  createData(2, "Xizmat 2", 15000),
-  createData(3, "Xizmat 3", 20000),
-  createData(4, "Xizmat 4", 25000),
-  createData(5, "Xizmat 5", 30000),
-];
+const rows = [createData(1, "Frozen yoghurt", 159, 6)];
 
-export default function ServiceTable() {
-  const handleEdit = id => {
-    // Handle edit action
-    console.log(`Edit service with id: ${id}`);
-  };
-
-  const handleDelete = id => {
-    // Handle delete action
-    console.log(`Delete service with id: ${id}`);
-  };
-
+export default function CustomizedTables({ data }) {
+  console.log(data);
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
             <StyledTableCell>T/R</StyledTableCell>
-            <StyledTableCell>Xizmat nomi</StyledTableCell>
-            <StyledTableCell align="right">
-              Xizmat narxi&nbsp;(so'm)
-            </StyledTableCell>
+            <StyledTableCell align="center">Service Name</StyledTableCell>
+            <StyledTableCell align="center">Service Price</StyledTableCell>
             <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
-            <StyledTableRow key={row.id}>
-              <StyledTableCell component="th" scope="row">
-                {row.id}
-              </StyledTableCell>
-              <StyledTableCell>{row.serviceName}</StyledTableCell>
-              <StyledTableCell align="right">{row.price}</StyledTableCell>
-              <StyledTableCell align="center">
-                <IconButton
-                  color="primary"
-                  aria-label="edit"
-                  onClick={() => handleEdit(row.id)}
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  color="secondary"
-                  aria-label="delete"
-                  onClick={() => handleDelete(row.id)}
-                >
-                  <DeleteIcon />
-                </IconButton>
+          {data.map((item, index) => (
+            <StyledTableRow key={index}>
+              <StyledTableCell align="center">{index + 1}</StyledTableCell>
+              <StyledTableCell align="center">{item.name}</StyledTableCell>
+              <StyledTableCell align="center">{item.price}</StyledTableCell>
+              <StyledTableCell>
+                <button>edit</button>
+                <button>delete</button>
               </StyledTableCell>
             </StyledTableRow>
           ))}

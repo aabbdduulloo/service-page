@@ -5,9 +5,10 @@ const http = axios.create({
 });
 
 http.interceptors.request.use(config => {
-  const acces_token = localStorage.getItem("acces_token");
-  if (acces_token) {
-    config.headers["Authorization"] = acces_token;
+  const accessToken = localStorage.getItem("access_token");
+  if (accessToken) {
+    // config.headers["Authorization"] = `Bearer ${access_token}`;
+    config.headers["Authorization"] = accessToken;
   }
   return config;
 });

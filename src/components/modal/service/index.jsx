@@ -4,11 +4,12 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import { useSpring, animated } from "@react-spring/web";
-import { forwardRef, cloneElement, useState } from "react";
+import { forwardRef, cloneElement } from "react";
 import { TextField, Button } from "@mui/material";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { service } from "@service";
 import { serviceValidationSchema } from "@validation";
+
 const Fade = forwardRef(function Fade(props, ref) {
   const {
     children,
@@ -69,9 +70,12 @@ export default function Index({ open, handleClose }) {
   };
 
   const handleSubmit = async values => {
+    console.log(values);
     try {
       const response = await service.create(values);
-      console.log(response);
+      if (response.status === 201) {
+        window.location.reload();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -113,7 +117,7 @@ export default function Index({ open, handleClose }) {
                     name="name"
                     type="text"
                     as={TextField}
-                    label="name"
+                    label="Name"
                     fullWidth
                     margin="normal"
                     variant="outlined"
@@ -148,7 +152,7 @@ export default function Index({ open, handleClose }) {
                     disabled={isSubmitting}
                     fullWidth
                   >
-                    {isSubmitting ? "Submitting" : "Save "}
+                    {isSubmitting ? "Submitting" : "Save"}
                   </Button>
                 </Form>
               )}

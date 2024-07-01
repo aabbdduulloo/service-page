@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Service } from "@modal";
 import { Button } from "@mui/material";
 import { ServiceTable } from "@ui";
@@ -6,13 +7,16 @@ import { service } from "@service";
 
 const Index = () => {
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState([]);
 
   const getData = async () => {
     try {
       const response = await service.get();
-      console.log(response);
+      if (response.status === 200 && response?.data?.services) {
+        setData(response.data.services);
+      }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error(error);
     }
   };
 
@@ -34,7 +38,7 @@ const Index = () => {
           </Button>
         </div>
 
-        <ServiceTable />
+        <ServiceTable data={data} />
       </div>
     </>
   );
