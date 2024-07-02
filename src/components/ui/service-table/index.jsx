@@ -1,4 +1,4 @@
-import * as React from "react";
+// import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,6 +7,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { Button } from "@mui/material";
+import { service } from "@service";
+import { Service } from "@modal";
+import { useState } from "react";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -27,39 +31,59 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(name, calories, fat, carbs) {
-  return { name, calories, fat, carbs };
-}
-
-const rows = [createData(1, "Frozen yoghurt", 159, 6)];
-
 export default function CustomizedTables({ data }) {
-  console.log(data);
+  const [edit, setEdit] = useState({});
+  const [open, setOpen] = useState(false);
+  const deleteItem = async id => {
+    try {
+      const response = await service.delete(id);
+      if (response.status === 200) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const editItem = item => {
+    setEdit(item);
+    setOpen(true);
+  };
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>T/R</StyledTableCell>
-            <StyledTableCell align="center">Service Name</StyledTableCell>
-            <StyledTableCell align="center">Service Price</StyledTableCell>
-            <StyledTableCell align="center">Action</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((item, index) => (
-            <StyledTableRow key={index}>
-              <StyledTableCell align="center">{index + 1}</StyledTableCell>
-              <StyledTableCell align="center">{item.name}</StyledTableCell>
-              <StyledTableCell align="center">{item.price}</StyledTableCell>
-              <StyledTableCell>
-                <button>edit</button>
-                <button>delete</button>
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <Service item={edit} open={open} handleClose={() => setOpen(false)} />
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>T/R</StyledTableCell>
+              <StyledTableCell align="center">Service Name</StyledTableCell>
+              <StyledTableCell align="center">Service Price</StyledTableCell>
+              <StyledTableCell align="center">Action</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((item, index) => (
+              <StyledTableRow key={index}>
+                <StyledTableCell align="center">{index + 1}</StyledTableCell>
+                <StyledTableCell align="center">{item.name}</StyledTableCell>
+                <StyledTableCell align="center">{item.price}</StyledTableCell>
+                <StyledTableCell>
+                  <Button onClick={() => editItem(item)} variant="outlined">
+                    edit
+                  </Button>
+                  <Button
+                    onClick={() => deleteItem(item.id)}
+                    variant="outlined"
+                    color="error"
+                  >
+                    delete
+                  </Button>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }

@@ -63,21 +63,33 @@ const style = {
   p: 4,
 };
 
-export default function Index({ open, handleClose }) {
+export default function Index({ open, handleClose, item }) {
+  console.log(item, "item");
   const initialValues = {
-    name: "",
-    price: "",
+    name: item?.name ? item?.name : "",
+    price: item?.price ? item?.price : "",
   };
 
   const handleSubmit = async values => {
-    console.log(values);
-    try {
-      const response = await service.create(values);
-      if (response.status === 201) {
-        window.location.reload();
+    if (item) {
+      const payload = { id: item.id, ...values };
+      try {
+        const response = await service.uptade(payload);
+        if (response.status === 200) {
+          window.location.reload();
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      try {
+        const response = await service.uptade(values);
+        if (response.status === 200) {
+          window.location.reload();
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
